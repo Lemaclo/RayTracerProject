@@ -1,11 +1,35 @@
 # include <iostream>
+# include <cmath>
 # include "include/vec3Class.hpp"
 # include "include/colorFunctions.hpp"
 # include "include/rayClass.hpp"
 
 using namespace std;
 
+// Dada una esfera y un rayo, regresa el tiempo t de interseccion del rayo
+// con la esfera, o -1 si no hay interseccion.
+double hit_sphere(const point3& center, double radius, const ray &r){
+	vec3 oc = center - r.origin;
+	// Resuelve una cuadratica que sale de la ecuacion de la esfera
+	double a = r.direction.norm2();
+	double b = -2.0f * dot(r.direction, oc);
+	double c = oc.norm2() - radius*radius;
+	double discriminant = b*b - 4*a*c;
+	if(discriminant < 0){
+		return -1.0f;
+	}
+	// Hay dos tiempos de interseccion. El menor es el que corresponde al frente
+	return (-b - sqrt(discriminant)) / (2.0f*a);
+}
+
 color rayTrace(const ray& r){
+	double t = hit_sphere(point3(0.0f,0.0f,-1.0f), 0.5, r);
+	// Si el rayo le pega a la esfera, el color que regresa depende del normal en ese punto
+	if(t > 0.0f){
+		vec3 N = normalize(r.at(t) - vec3(0.0f,0.0f,-1.0f));
+		return 0.5*color(N.x() + 1.0f, N.y() + 1.0f, N.z() + 1.0f);
+	}
+	// Fondo
 	double h = 0.5 * (r.direction.y() + 1.0f); // Entre 0 y 1, pues direction esta normalizado
 	return (1.0f - h)*color(0.63f, 0.28f, 0.92f) + h*color(0.96f, 0.76f, 0.43f);
 }
