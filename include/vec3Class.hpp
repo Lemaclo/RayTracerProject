@@ -29,19 +29,48 @@ struct vec3{
 	double norm2() const;
 };
 
+// Aquí tuve un pequeño error: Las funciones inline no se puden definir en el archivo .cpp!
 
-inline ostream& operator<<(ostream &o, const vec3& v); // Imprime un vector
+inline ostream& operator<<(ostream &o, const vec3& v){ // Imprime un vector
+	return o << v[0] << ' ' << v[1] << ' ' << v[2];
+}
+
 // Operaciones aritméticas entre vectores
-inline vec3 operator+(const vec3& u, const vec3& v);
-inline vec3 operator-(const vec3& u, const vec3& v);
-inline vec3 operator*(const vec3& u, const vec3& v); // Entrada a entrada
-// Operaciones aritméticas entre vectores y escalares
-inline vec3 operator*(const vec3& u, double t);
-inline vec3 operator*(double t, const vec3& u);
-inline vec3 operator/(const vec3& u, double t);
-// Operaciones vectoriales
-inline double dot(const vec3& u, const vec3& v);
-inline vec3 cross(const vec3& u, const vec3& v);
-inline vec3 normalize(const vec3& u);
+inline vec3 operator+(const vec3& u, const vec3& v){
+	return vec3(u[0] + v[0], u[1] + v[1], u[2] + v[2]);
+}
 
+inline vec3 operator-(const vec3& u, const vec3& v){
+	return vec3(u[0] - v[0], u[1] - v[1], u[2] - v[2]);
+}
+
+inline vec3 operator*(const vec3& u, const vec3& v){ //Entrada a entrada
+	return vec3(u[0] * v[0], u[1] * v[1], u[2] * v[2]);
+}
+
+// Operaciones aritméticas entre vectores y escalares
+inline vec3 operator*(const vec3& u, double t){
+	return vec3(u[0] * t, u[1] * t, u[2] * t);
+}
+
+inline vec3 operator*(double t, const vec3& u){
+	return vec3(u[0] * t, u[1] * t, u[2] * t);
+}
+
+inline vec3 operator/(const vec3& u, double t){
+	return vec3(u[0] / t, u[1] / t, u[2] / t);
+}
+
+// Operaciones vectoriales
+inline double dot(const vec3& u, const vec3& v){
+	return u[0]*v[0] + u[1]*v[1] + u[2]*v[2];
+}
+
+inline vec3 cross(const vec3& u, const vec3& v){
+	return vec3(u[1]*v[2] - u[2]*v[1], -u[0]*v[2] + u[2]*v[0], u[0]*v[1] - u[1]*v[0]);
+}
+
+inline vec3 normalize(const vec3& u){
+	return u / u.norm();
+}
 # endif
