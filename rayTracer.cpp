@@ -3,33 +3,18 @@
 # include "include/vec3Class.hpp"
 # include "include/colorFunctions.hpp"
 # include "include/rayClass.hpp"
+# include "include/sphereClass.hpp"
+# include "include/hittableClass.hpp"
+# include "include/hittableListClass.hpp"
 
 using namespace std;
 
-// Dada una esfera y un rayo, regresa el tiempo t de interseccion del rayo
-// con la esfera, o -1 si no hay interseccion.
-double hit_sphere(const point3& center, double radius, const ray &r){
-	vec3 oc = center - r.origin;
-	// Resuelve una cuadratica que sale de la ecuacion de la esfera
-	double a = r.direction.norm2();
-	double b = -2.0f * dot(r.direction, oc);
-	double c = oc.norm2() - radius*radius;
-	double discriminant = b*b - 4*a*c;
-	if(discriminant < 0){
-		return -1.0f;
+color rayTrace(const ray& r, const hittable &world){
+	hit_record rec;
+	if(world.hit(r,0,1e9,rec)){
+		return 0.5*color(rec.normal.x() + 1.0f, rec.normal.y() + 1.0f, rec.normal.z() + 1.0f);
 	}
-	// Hay dos tiempos de interseccion. El menor es el que corresponde al frente
-	return (-b - sqrt(discriminant)) / (2.0f*a);
-}
-
-color rayTrace(const ray& r){
-	double t = hit_sphere(point3(0.0f,0.0f,-1.0f), 0.5, r);
-	// Si el rayo le pega a la esfera, el color que regresa depende del normal en ese punto
-	if(t > 0.0f){
-		vec3 N = normalize(r.at(t) - vec3(0.0f,0.0f,-1.0f));
-		return 0.5*color(N.x() + 1.0f, N.y() + 1.0f, N.z() + 1.0f);
-	}
-	// Fondo
+	// Fondo (si no hubo colisión)
 	double h = 0.5 * (r.direction.y() + 1.0f); // Entre 0 y 1, pues direction esta normalizado
 	return (1.0f - h)*color(0.63f, 0.28f, 0.92f) + h*color(0.96f, 0.76f, 0.43f);
 }
@@ -37,7 +22,7 @@ color rayTrace(const ray& r){
 int main(){
 	// Configuración de la imagen 
 	double aspect_ratio = 16.0f / 9.0f;
-	int image_width = 800;
+	int image_width = 400;
 	int image_height = max(1, int(image_width / aspect_ratio));
 	// Configuración de la cámara
 	// El rectángulo viewport representa la ubicación (en R3) de nuestra pantalla, con 
@@ -58,14 +43,10 @@ int main(){
 	point3 pixel_origin = viewport_origin + 0.5*pixel_horizontal_delta + 0.5*pixel_vertical_delta;
 	
 	// Encabezado del formato PPM de imagen
-	vec3 v(1.0f,2.0f,-3.0f);
-	clog << "Prueba:\n" <<
-		v.norm() << '\n' <<
-		v.norm2() << '\n' <<
-		normalize(v) << '\n' <<
-		normalize(v).norm() << '\n' <<
-		normalize(v).norm2() << '\n';
 	cout << "P3\n" << image_width << ' ' << image_height << "\n255\n";
+	// Escena de prueba
+	shared_ptr<sphere> s = make_shared<sphere>(0.5f, point3(0.0f,0.0f,-1.0f));
+	hittableList world(s);
 	// Hacemos un gradiente sencillo
 	for(int i=0;i<image_height;i++){
 		// Indicador de progreso simple.
@@ -77,7 +58,7 @@ int main(){
 			vec3 ray_direction = normalize(pixel_center - camera_center);
 			ray r(camera_center, ray_direction);
 			// Calculamos el color de ese rayo (esto es lo más importante)
-			color pixel_color = rayTrace(r);
+			color pixel_color = rayTrace(r, world);
 			// Y escribimos el color al archivo.
 			write_color(cout, pixel_color);
 		}
