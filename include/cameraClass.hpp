@@ -10,6 +10,7 @@ struct camera{
 	int image_width = 100; // Ancho
 	int image_height; // Alto
 	int samples_per_pixel = 10; // Supersampling. Cuantos rayos tiramos por pixel.
+	int max_depth = 10; // Máximo número de veces que un rayo rebota
 	vec3 camera_center = point3(0.0f,0.0f,0.0f); // Punto de vista del mundo 
 	// Vectores auxiliares para trabajar la posicion de los pixeles en la escena
 	vec3 pixel_horizontal_delta;
@@ -18,7 +19,7 @@ struct camera{
 	camera();
 	void init();
 	// Función principal de todo esto: Lanza un rayo y devuelve un color.
-	color rayTrace(const ray& r,  const hittable& world); 
+	color rayTrace(const ray& r,  const hittable& world, int depth); 
 	// Lanza un rayo por pixel y crea una imagen
 	void render(const hittable& world);
 	// Devuelve un rayo para el pixel i,j aleatorio en un cuadrado pequeño

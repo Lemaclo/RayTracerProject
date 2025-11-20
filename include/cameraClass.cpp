@@ -20,12 +20,16 @@ void camera::init(){
 }
 
 // Función principal del proyecto. Lanza un rayo, y devuelve un color
-color camera::rayTrace(const ray& r,  const hittable& world){
+color camera::rayTrace(const ray& r,  const hittable& world, int depth){
+	if(depth <= 0) return color(0.0f,0.0f,0.0f);
 	hit_record rec;
-	if(world.hit(r,interval(0,infinity),rec)){
+	if(world.hit(r,interval(0.001,infinity),rec)){
 		//return 0.5*(rec.normal + color(1.0f,1.0f,1.0f));
-		vec3 random_direction = random_on_hemisphere(rec.normal);
-		return 0.5 * rayTrace(ray(rec.p, random_direction), world);
+		// Uniforme
+		//vec3 random_direction = random_on_hemisphere(rec.normal);
+		// Aparentemente, esto es otra distribucion
+		vec3 random_direction = rec.normal + random_unit_vector();
+		return 0.5 * rayTrace(ray(rec.p, random_direction), world, depth-1);
 	}
 	// Fondo (si no hubo colisión)
 	double h = 0.5 * (r.direction.y() + 1.0f); // Entre 0 y 1, pues direction esta normalizado
@@ -45,7 +49,7 @@ void camera::render(const hittable& world){
 			// Lanzamos varios rayos por pixel, y tomamos el promedio
 			for(int sample=0;sample<samples_per_pixel;sample++){
 				ray r = get_ray(i,j);
-				pixel_color += rayTrace(r,world);
+				pixel_color += rayTrace(r,world,max_depth);
 			}
 			pixel_color /= (double)samples_per_pixel;
 			// Y escribimos el color al archivo.
