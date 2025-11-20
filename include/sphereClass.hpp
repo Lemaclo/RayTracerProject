@@ -1,8 +1,6 @@
 # ifndef SPHERE
 # define SPHERE
 
-# include "vec3Class.hpp"
-# include "rayClass.hpp"
 # include "hittableClass.hpp"
 
 // Primitiva de esfera. 

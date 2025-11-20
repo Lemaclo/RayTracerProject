@@ -1,0 +1,3 @@
+# include "utility.hpp"
+
+// Vacío por ahora... La única función es degrees_to_radians, pero es inline...

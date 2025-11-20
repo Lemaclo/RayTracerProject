@@ -1,8 +1,9 @@
 # ifndef HITTABLE
 # define HITTABLE
 
-# include "vec3Class.hpp"
 # include "rayClass.hpp"
+# include <vector>
+# include <memory>
 
 // Estructura para guardar la información de colisión de un rayo
 struct hit_record{

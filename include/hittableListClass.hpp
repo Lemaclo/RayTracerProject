@@ -2,8 +2,6 @@
 # define HITTABLE_LIST
 
 # include "hittableClass.hpp"
-# include <memory>
-# include <vector>
 
 using namespace std;
 

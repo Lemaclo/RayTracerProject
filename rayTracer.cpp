@@ -1,11 +1,4 @@
-# include <iostream>
-# include <cmath>
-# include "include/vec3Class.hpp"
-# include "include/colorFunctions.hpp"
-# include "include/rayClass.hpp"
-# include "include/sphereClass.hpp"
-# include "include/hittableClass.hpp"
-# include "include/hittableListClass.hpp"
+# include "include/utility.hpp"
 
 using namespace std;
 
@@ -45,8 +38,12 @@ int main(){
 	// Encabezado del formato PPM de imagen
 	cout << "P3\n" << image_width << ' ' << image_height << "\n255\n";
 	// Escena de prueba
-	shared_ptr<sphere> s = make_shared<sphere>(0.5f, point3(0.0f,0.0f,-1.0f));
-	hittableList world(s);
+	shared_ptr<sphere> s1 = make_shared<sphere>(0.5f, point3(0.0f,0.0f,-1.0f));
+	shared_ptr<sphere> s2 = make_shared<sphere>(0.3f, point3(-1.0f,0.0f,-1.0f));
+	shared_ptr<sphere> s3 = make_shared<sphere>(0.2f, point3(1.0f,0.5f,-1.0f));
+	hittableList world(s1);
+	world.add(s2);
+	world.add(s3);
 	// Hacemos un gradiente sencillo
 	for(int i=0;i<image_height;i++){
 		// Indicador de progreso simple.
