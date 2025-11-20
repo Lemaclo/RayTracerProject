@@ -1,11 +1,7 @@
 # ifndef INTERVAL
 # define INTERVAL
 
-# include<limits>
-
-using namespace std;
-
-const double infinity = numeric_limits<double>::infinity();
+# include "utility.hpp"
 
 // Clase de intervalos para trabajar con los timepos de los rayos
 struct interval {
@@ -15,6 +11,7 @@ struct interval {
 	double size() const; // Longitud del intervalo
 	bool contains(double x); // x in i?
 	bool surrounds(double x); // Sin considerar la frontera
+	double clamp(double x) const; // Regresa el punto del intervalo mas cercano a x
 	static const interval empty, universe; // Intervalos vacios y R, respectivamente
 };
 

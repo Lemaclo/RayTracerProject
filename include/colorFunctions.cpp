@@ -5,9 +5,10 @@ void write_color(ostream &o, const color& pixel_color){
 	double r = pixel_color.x();
 	double g = pixel_color.y();
 	double b = pixel_color.z();
+	const interval intensity(0.0f, 0.9999f);
 	// Valores enteros entre 0 y 255
-	int R = int(r * 255.999f);
-	int G = int(g * 255.999f);
-	int B = int(b * 255.999f);
+	int R = int(256 * intensity.clamp(r));
+	int G = int(256 * intensity.clamp(g));
+	int B = int(256 * intensity.clamp(b));
 	o << R << ' ' << G << ' ' << B << '\n';
 }

@@ -4,6 +4,7 @@
 # include <cmath>
 # include <iostream>
 # include "intervalClass.hpp"
+# include "utility.hpp"
 
 # define point3 vec3
 
@@ -29,6 +30,9 @@ struct vec3{
 	vec3& operator/=(double t);
 	double norm() const;
 	double norm2() const;
+	// Vectores aleatorios
+	static vec3 random(); // Vector con entradas entre [0 y 1)
+	static vec3 random(double min, double max); // Vector con entradas entre [min y max)
 };
 
 // Aquí tuve un pequeño error: Las funciones inline no se puden definir en el archivo .cpp!
@@ -75,4 +79,26 @@ inline vec3 cross(const vec3& u, const vec3& v){
 inline vec3 normalize(const vec3& u){
 	return u / u.norm();
 }
+
+// Devuelve un vector aleatorio en la esfera unitaria. Hace esto rechazando vectores
+// que se salen hasta encontrar uno que no se salga (de la esfera) y lo normaliza.
+// No normalizamos el primero para que la disrtribución sea uniforme
+inline vec3 random_unit_vector(){
+	while(true){
+		vec3 v = vec3::random(-1,1);
+		double n2 = v.norm2();
+		// Si es muy pequeño, rechazamos para evitar errores numéricos.
+		if(1e-160 < n2 && n2 <= 1){
+			return normalize(v);
+		}
+	}
+}
+
+// Regresa un vector unitario aleatorio en el mismo hemisferio que el vector normal
+inline vec3 random_on_hemisphere(const vec3 &n){
+	vec3 v = random_unit_vector();
+	if(dot(v, n) > 0.0f) return v;
+	return -v;
+}
+
 # endif

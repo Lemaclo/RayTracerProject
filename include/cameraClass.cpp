@@ -23,7 +23,9 @@ void camera::init(){
 color camera::rayTrace(const ray& r,  const hittable& world){
 	hit_record rec;
 	if(world.hit(r,interval(0,infinity),rec)){
-		return 0.5*(rec.normal + color(1.0f,1.0f,1.0f));
+		//return 0.5*(rec.normal + color(1.0f,1.0f,1.0f));
+		vec3 random_direction = random_on_hemisphere(rec.normal);
+		return 0.5 * rayTrace(ray(rec.p, random_direction), world);
 	}
 	// Fondo (si no hubo colisión)
 	double h = 0.5 * (r.direction.y() + 1.0f); // Entre 0 y 1, pues direction esta normalizado
@@ -39,16 +41,30 @@ void camera::render(const hittable& world){
 		// Indicador de progreso simple.
 		clog << "Trabajando en la fila " << i << " de " << image_height << "...\n" << flush;
 		for(int j=0;j<image_width;j++){
-			// Primero, determinamos la ubicación del pixel (j,i)
-			point3 pixel_center = pixel_origin + (i*pixel_vertical_delta) + (j*pixel_horizontal_delta);
-			// Luego, creamos un rayo desde el ojo del espectador hacia dicho pixel
-			vec3 ray_direction = normalize(pixel_center - camera_center);
-			ray r(camera_center, ray_direction);
-			// Calculamos el color de ese rayo (esto es lo más importante)
-			color pixel_color = rayTrace(r, world);
+			color pixel_color = color(0.0f,0.0f,0.0f);
+			// Lanzamos varios rayos por pixel, y tomamos el promedio
+			for(int sample=0;sample<samples_per_pixel;sample++){
+				ray r = get_ray(i,j);
+				pixel_color += rayTrace(r,world);
+			}
+			pixel_color /= (double)samples_per_pixel;
 			// Y escribimos el color al archivo.
 			write_color(cout, pixel_color);
 		}
 	}
 	clog << "Render completado\n";
+}
+
+ray camera::get_ray(int i, int j){
+	vec3 offset = sample_square();
+	// Primero, determinamos la ubicación del rayo, modificando ligeramente la ubicación del pixel
+	vec3 pixel_sample = pixel_origin + ((i+offset.y())*pixel_vertical_delta) + 
+		((j+offset.x())*pixel_horizontal_delta);
+	// Luego, creamos un rayo desde el ojo del espectador hacia dicho pixel
+	vec3 ray_direction = normalize(pixel_sample - camera_center);
+	return ray(camera_center, ray_direction);
+}
+
+vec3 camera::sample_square() const {
+	return vec3(random_double() - 0.5f, random_double() - 0.5f, 0);
 }

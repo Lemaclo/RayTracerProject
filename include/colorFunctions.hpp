@@ -3,6 +3,7 @@
 
 # define color vec3
 # include "vec3Class.hpp"
+# include "intervalClass.hpp"
 
 // Función auxiliar para escribir el color de un pixel en el formato R G B (enteros)
 void write_color(ostream &o, const color& pixel_color);
