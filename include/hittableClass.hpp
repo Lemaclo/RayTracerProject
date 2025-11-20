@@ -26,7 +26,7 @@ struct hittable{
 	virtual ~hittable() = default; 
 	// Esta sintaxis es nueva para mi. Significa que esta función tiene que ser
 	// implementada en la clase hijo, o si no no se puede instanciar
-	virtual bool hit(const ray& r, double tmin, double tmax, hit_record& rec) const = 0;
+	virtual bool hit(const ray& r, interval t, hit_record& rec) const = 0;
 };
 
 # endif

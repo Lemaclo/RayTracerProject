@@ -4,8 +4,8 @@ using namespace std;
 
 color rayTrace(const ray& r, const hittable &world){
 	hit_record rec;
-	if(world.hit(r,0,1e9,rec)){
-		return 0.5*color(rec.normal.x() + 1.0f, rec.normal.y() + 1.0f, rec.normal.z() + 1.0f);
+	if(world.hit(r,interval(0,infinity),rec)){
+		return 0.5*(rec.normal + color(1.0f,1.0f,1.0f));
 	}
 	// Fondo (si no hubo colisión)
 	double h = 0.5 * (r.direction.y() + 1.0f); // Entre 0 y 1, pues direction esta normalizado
@@ -39,11 +39,9 @@ int main(){
 	cout << "P3\n" << image_width << ' ' << image_height << "\n255\n";
 	// Escena de prueba
 	shared_ptr<sphere> s1 = make_shared<sphere>(0.5f, point3(0.0f,0.0f,-1.0f));
-	shared_ptr<sphere> s2 = make_shared<sphere>(0.3f, point3(-1.0f,0.0f,-1.0f));
-	shared_ptr<sphere> s3 = make_shared<sphere>(0.2f, point3(1.0f,0.5f,-1.0f));
+	shared_ptr<sphere> s2 = make_shared<sphere>(100.0f, point3(0, -100.5f, -1.0f));
 	hittableList world(s1);
 	world.add(s2);
-	world.add(s3);
 	// Hacemos un gradiente sencillo
 	for(int i=0;i<image_height;i++){
 		// Indicador de progreso simple.

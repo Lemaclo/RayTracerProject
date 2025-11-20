@@ -3,6 +3,8 @@
 
 # include <cmath>
 # include <iostream>
+# include "intervalClass.hpp"
+
 # define point3 vec3
 
 using namespace std;

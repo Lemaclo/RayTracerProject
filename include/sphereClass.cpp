@@ -7,7 +7,7 @@ sphere::sphere(){
 
 sphere::sphere(double r, point3 c) : radius(r), center(c) {}
 
-bool sphere::hit(const ray& r, double tmin, double tmax, hit_record &rec) const {
+bool sphere::hit(const ray& r, interval t, hit_record &rec) const {
 	vec3 oc = center - r.origin;
 	// Resuelve una cuadratica que sale de la ecuacion de la esfera
 	double a = r.direction.norm2();
@@ -20,9 +20,9 @@ bool sphere::hit(const ray& r, double tmin, double tmax, hit_record &rec) const 
 	double sq = sqrt(discriminant);
 	// Hay dos tiempos de interseccion. Vamos a seleccionar el que sea válido (en [tmin, tmax])
 	double root = (h - sq) / a;
-	if(root < tmin || root > tmax){
+	if(!t.surrounds(root)){
 		root = (h + sq) / a;
-		if(root < tmin || root > tmax) return false;
+		if(!t.surrounds(root)) return false;
 	}
 	// Si encontramos un tiempo válido, lo registramos en rec
 	rec.t = root;

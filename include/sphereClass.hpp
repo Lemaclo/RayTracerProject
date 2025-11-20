@@ -10,7 +10,7 @@ struct sphere : hittable{
 	point3 center;
 	sphere();
 	sphere(double r, point3 c);
-	bool hit(const ray& r, double tmin, double tmax, hit_record &rec) const override;
+	bool hit(const ray& r, interval t, hit_record &rec) const override;
 };
 
 # endif

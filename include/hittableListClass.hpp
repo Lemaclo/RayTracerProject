@@ -13,7 +13,7 @@ struct hittableList : hittable{
 
 	void clear(); // Reinicia la lista de objetos
 	void add(shared_ptr<hittable> obj); // Añade un objeto nuevo
-	bool hit(const ray& r, double tmin, double tmax, hit_record& rec) const override;
+	bool hit(const ray& r, interval t, hit_record& rec) const override;
 };
 
 # endif
