@@ -58,3 +58,7 @@ vec3 vec3::random(){
 vec3 vec3::random(double min, double max){
 	return vec3(random_double(min, max), random_double(min, max), random_double(min, max));
 }
+
+bool vec3::near_zero() const{
+	return fabs(v[0]) < 1e-8 && fabs(v[1]) < 1e-8 && fabs(v[2]) < 1e-8;
+}

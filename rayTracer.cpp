@@ -20,16 +20,16 @@ using namespace std;
 using namespace std;
 
 int main(){
+	// Materiales
+	shared_ptr<material> ground = make_shared<lambertian>(color(0.8,0.8,0.0), 0.5, 0.5);
+	shared_ptr<material> left = make_shared<metal>(color(0.8f,0.8f,0.8f), 0.1, 0.1);
+	shared_ptr<material> center = make_shared<lambertian>(color(0.1f,0.2f,0.5f), 0.2, 0.2);
+	shared_ptr<material> right = make_shared<metal>(color(0.8f,0.6f,0.2f), 0.2, 0.2);
 	// Escena de prueba hardcodeada
-	shared_ptr<material> m1 = make_shared<metal>(color(0.3f,0.3f,0.3f), 0.5);
-	shared_ptr<material> m2 = make_shared<lambertian>(color(0.1f,0.8f,0.3f), 0.1);
-	shared_ptr<material> m3 = make_shared<lambertian>(color(0.8f,0.1f,0.2f), 0.2);
-	shared_ptr<sphere> s1 = make_shared<sphere>(0.5f, point3(0.0f,0.0f,-1.0f), m1);
-	shared_ptr<sphere> s2 = make_shared<sphere>(100.0f, point3(0, -100.5f, -1.0f), m2);
-	shared_ptr<sphere> s3 = make_shared<sphere>(0.3f, point3(1.0f, 0.5f, -1.0f), m3);
-	hittableList world(s1);
-	world.add(s2);
-	world.add(s3);
+	hittableList world(make_shared<sphere>(100.0f, point3(0, -100.5f, -1.0f), ground));
+	world.add(make_shared<sphere>(0.5f, point3(0.0f,0.0f,-1.2f), center));
+	world.add(make_shared<sphere>(0.5f, point3(-1.0f,0.0f,-1.0f), left));
+	world.add(make_shared<sphere>(0.5f, point3(1.0f,0.0f,-1.0f), right));
 	// Creamos una cámara
 	camera cam;
 	cam.aspect_ratio = 16.0f / 9.0f;

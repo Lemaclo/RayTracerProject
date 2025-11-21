@@ -33,6 +33,7 @@ struct vec3{
 	// Vectores aleatorios
 	static vec3 random(); // Vector con entradas entre [0 y 1)
 	static vec3 random(double min, double max); // Vector con entradas entre [min y max)
+	bool near_zero() const;
 };
 
 // Aquí tuve un pequeño error: Las funciones inline no se puden definir en el archivo .cpp!

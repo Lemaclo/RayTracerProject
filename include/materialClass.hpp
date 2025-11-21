@@ -8,7 +8,8 @@
 struct material{
 	color col;
 	bool light_source;
-	double ref;
+	double reflection_coefficient;
+	double color_coefficient;
 
 	virtual ~material() = default;
 	
@@ -16,12 +17,12 @@ struct material{
 };
 
 struct metal : public material{
-	metal(color c, double r);
+	metal(color c, double rco, double cco);
 	bool scatter(const ray& r_in, const hit_record& rec, ray &r_out) override;
 };
 
 struct lambertian : public material{
-	lambertian(color c, double r);
+	lambertian(color c, double rco, double cco);
 	bool scatter(const ray& r_in, const hit_record& rec, ray &r_out) override;
 };
 

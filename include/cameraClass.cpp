@@ -25,9 +25,9 @@ color camera::rayTrace(const ray& r,  const hittable& world, int depth){
 	hit_record rec;
 	if(world.hit(r,interval(0.001,infinity),rec)){
 		ray reflection;
-		double ref_coefficient = rec.mat->ref;
+		//double ref_coefficient = rec.mat->ref;
 		if(rec.mat->scatter(r,rec,reflection))
-			return rec.mat->col * (ref_coefficient*rayTrace(reflection,world, depth-1));
+			return rec.mat->col * rayTrace(reflection,world, depth-1);
 	}
 	// Fondo (si no hubo colisión)
 	double h = 0.5 * (r.direction.y() + 1.0f); // Entre 0 y 1, pues direction esta normalizado
