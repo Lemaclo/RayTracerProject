@@ -24,12 +24,10 @@ color camera::rayTrace(const ray& r,  const hittable& world, int depth){
 	if(depth <= 0) return color(0.0f,0.0f,0.0f);
 	hit_record rec;
 	if(world.hit(r,interval(0.001,infinity),rec)){
-		//return 0.5*(rec.normal + color(1.0f,1.0f,1.0f));
-		// Uniforme
-		//vec3 random_direction = random_on_hemisphere(rec.normal);
-		// Aparentemente, esto es otra distribucion
-		vec3 random_direction = rec.normal + random_unit_vector();
-		return 0.5 * rayTrace(ray(rec.p, random_direction), world, depth-1);
+		ray reflection;
+		double ref_coefficient = rec.mat->ref;
+		if(rec.mat->scatter(r,rec,reflection))
+			return rec.mat->col * (ref_coefficient*rayTrace(reflection,world, depth-1));
 	}
 	// Fondo (si no hubo colisión)
 	double h = 0.5 * (r.direction.y() + 1.0f); // Entre 0 y 1, pues direction esta normalizado

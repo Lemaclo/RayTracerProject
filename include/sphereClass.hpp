@@ -9,8 +9,9 @@ struct sphere : hittable{
 	double radius;
 	point3 center;
 	sphere();
-	sphere(double r, point3 c);
+	sphere(double r, point3 c, shared_ptr<material> &m);
 	bool hit(const ray& r, interval t, hit_record &rec) const override;
+	shared_ptr<material> mat;
 };
 
 # endif

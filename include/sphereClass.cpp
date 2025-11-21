@@ -5,7 +5,8 @@ sphere::sphere(){
 		center = vec3(0.0f,0.0f,0.0f);
 }
 
-sphere::sphere(double r, point3 c) : radius(r), center(c) {}
+sphere::sphere(double r, point3 c, shared_ptr<material> &m) : radius(r), center(c),
+mat(m) {}
 
 bool sphere::hit(const ray& r, interval t, hit_record &rec) const {
 	vec3 oc = center - r.origin;
@@ -27,6 +28,7 @@ bool sphere::hit(const ray& r, interval t, hit_record &rec) const {
 	// Si encontramos un tiempo válido, lo registramos en rec
 	rec.t = root;
 	rec.p = r.at(root);
+	rec.mat = mat;
 	vec3 out_normal = (rec.p - center) / radius; // Dividimos sobre el radio para normalizar
 	rec.set_face_normal(r, out_normal);
 	return true;

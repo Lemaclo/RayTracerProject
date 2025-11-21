@@ -4,6 +4,7 @@
 # include "hittableClass.hpp"
 # include "colorFunctions.hpp"
 # include "utility.hpp"
+# include "materialClass.hpp"
 
 struct camera{
 	double aspect_ratio = 1.0f; // Proporción de altura y ancho de la imagen

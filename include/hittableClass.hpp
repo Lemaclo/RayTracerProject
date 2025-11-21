@@ -5,12 +5,14 @@
 # include <vector>
 # include <memory>
 
+struct material;
 // Estructura para guardar la información de colisión de un rayo
 struct hit_record{
 	point3 p; // Punto de intersección
 	vec3 normal; // Vector normal (en contra del rayo)
 	double t; // Tiempo de intersección
 	bool front_face; // True si el rayo pegó por fuera de la primitiva
+	shared_ptr<material> mat;
 			 
 	// En las primitivas calculamos el vector normal hacia afuera, pero
 	// en algunos casos, queremos el que va hacia adentro, porque siempre queremos
