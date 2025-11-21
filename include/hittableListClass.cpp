@@ -28,3 +28,7 @@ bool hittableList::hit(const ray& r, interval t, hit_record& rec) const {
 	rec = cur_record;
 	return hit_any;
 }
+
+void hittableList::add_light_source(light l){
+	light_sources.push_back(l);
+}

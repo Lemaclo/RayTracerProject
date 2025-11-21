@@ -1,10 +1,12 @@
 # include "materialClass.hpp"
 
-metal::metal(color c, double rco, double cco){
+metal::metal(color c, double ka, double kd, double ks, double refl, double refr){
 	col = c;
-	reflection_coefficient = rco;
-	color_coefficient = cco;
-	light_source = false; 
+	ambient_coefficient = ka;
+	diffuse_coefficient = kd;
+	specular_coefficient = ks;
+	reflectance = refl;
+	refractance = refr;
 }
 
 bool metal::scatter(const ray& r_in, const hit_record& rec, ray &r_out){
@@ -14,11 +16,13 @@ bool metal::scatter(const ray& r_in, const hit_record& rec, ray &r_out){
 	return true;
 }
 
-lambertian::lambertian(color c, double rco, double cco){
+lambertian::lambertian(color c, double ka, double kd, double ks, double refl, double refr){
 	col = c;
-	reflection_coefficient = rco;
-	color_coefficient = cco;
-	light_source = false; 
+	ambient_coefficient = ka;
+	diffuse_coefficient = kd;
+	specular_coefficient = ks;
+	reflectance = refl;
+	refractance = refr;
 }
 
 bool lambertian::scatter(const ray& r_in, const hit_record& rec, ray &r_out){

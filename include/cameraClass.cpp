@@ -20,22 +20,38 @@ void camera::init(){
 }
 
 // Función principal del proyecto. Lanza un rayo, y devuelve un color
-color camera::rayTrace(const ray& r,  const hittable& world, int depth){
+color camera::rayTrace(const ray& r,  const hittableList& world, int depth){
 	if(depth <= 0) return color(0.0f,0.0f,0.0f);
 	hit_record rec;
 	if(world.hit(r,interval(0.001,infinity),rec)){
-		ray reflection;
+		// PRUEBA: LUZ
+		double ka = rec.mat->ambient_coefficient;
+		color radiance = ka * world.ambient_light;
+		for(light l : world.light_sources){
+			hit_record shadow_rec;
+			vec3 dir = l.location - rec.p;
+			double t_light = dir.norm();
+			vec3 light_dir = dir / t_light;
+			ray shadow_ray(rec.p, light_dir);
+			if(!world.hit(shadow_ray,interval(0.001f,t_light),shadow_rec)){
+				radiance += phong_ilumination(rec, r, shadow_ray, l, world);
+			}
+			ray reflection;
+			if(rec.mat->scatter(r,rec,reflection))
+				 radiance += rec.mat->reflectance * rayTrace(reflection,world, depth-1); 
+			return radiance * rec.mat->col;
+			// TODO: Refraction rayy
+		}
 		//double ref_coefficient = rec.mat->ref;
-		if(rec.mat->scatter(r,rec,reflection))
-			return rec.mat->col * rayTrace(reflection,world, depth-1);
 	}
 	// Fondo (si no hubo colisión)
-	double h = 0.5 * (r.direction.y() + 1.0f); // Entre 0 y 1, pues direction esta normalizado
-	return (1.0f - h)*color(0.63f, 0.28f, 0.92f) + h*color(0.96f, 0.76f, 0.43f);
+	return color(0.01,0.01,0.01);
+	//double h = 0.5 * (r.direction.y() + 1.0f); // Entre 0 y 1, pues direction esta normalizado
+	//return (1.0f - h)*color(0.63f, 0.28f, 0.92f) + h*color(0.96f, 0.76f, 0.43f);
 }
 
 // Lanza un rayo por pixel, y crea una imagen
-void camera::render(const hittable& world){
+void camera::render(const hittableList& world){
 	init();
 	// Encabezado del formato PPM de imagen
 	cout << "P3\n" << image_width << ' ' << image_height << "\n255\n";
@@ -69,4 +85,24 @@ ray camera::get_ray(int i, int j){
 
 vec3 camera::sample_square() const {
 	return vec3(random_double() - 0.5f, random_double() - 0.5f, 0);
+}
+
+color camera::phong_ilumination(hit_record &rec, const ray& camera_ray, const ray& shadow_ray, light l,
+		const hittableList& world){
+	double kd = rec.mat->diffuse_coefficient;
+	double ks = rec.mat->specular_coefficient;
+	double ddot = dot(shadow_ray.direction, rec.normal);
+	color diffuse = color(0,0,0);
+	color specular = color(0,0,0);
+	if(ddot > 0.0f){
+		diffuse = kd * ddot * l.diffuse_component;
+	}
+	vec3 r = reflect(shadow_ray.direction, rec.normal);
+	double sdot = dot(r, camera_ray.direction); // alpha pow
+	if(sdot > 0){
+		sdot *= sdot;
+		specular = ks * sdot * l.specular_component;
+	}
+	return diffuse + specular;
+	
 }

@@ -5,11 +5,12 @@
 # include "colorFunctions.hpp"
 # include "hittableClass.hpp"
 
+using namespace std;
+
 struct material{
 	color col;
-	bool light_source;
-	double reflection_coefficient;
-	double color_coefficient;
+	double ambient_coefficient, diffuse_coefficient, specular_coefficient;
+	double reflectance, refractance;
 
 	virtual ~material() = default;
 	
@@ -17,12 +18,12 @@ struct material{
 };
 
 struct metal : public material{
-	metal(color c, double rco, double cco);
+	metal(color c, double ka, double kd, double ks, double refl, double refr);
 	bool scatter(const ray& r_in, const hit_record& rec, ray &r_out) override;
 };
 
 struct lambertian : public material{
-	lambertian(color c, double rco, double cco);
+	lambertian(color c, double ka, double kd, double ks, double refl, double refr);
 	bool scatter(const ray& r_in, const hit_record& rec, ray &r_out) override;
 };
 
