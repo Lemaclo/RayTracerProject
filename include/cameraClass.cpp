@@ -4,18 +4,27 @@ camera::camera(){}
 
 void camera::init(){
 	image_height = max(1, int(image_width / aspect_ratio));
-	double focal_length = 1.0f; // Distancia de la camara al plano de vista
-	double viewport_height = 2.0f;  // Dimensiones del plano de vista
+	camera_center = lookfrom;
+	double focal_length = (lookfrom - lookat).norm(); // Distancia de la camara al plano de vista
+	double theta = degrees_to_radians(vfov);
+	double h = tan(theta / 2.0f);
+	double viewport_height = 2.0f * h * focal_length;  // Dimensiones del plano de vista
 	double viewport_width = viewport_height * ((double)image_width / image_height);
+	
+	// Calculamos una base desde el plano de la camara:
+	vec3 w = normalize(lookfrom - lookat);
+	vec3 u = normalize(cross(vup, w));
+	vec3 v = cross(w,u);
+	
 	// Vectores auxiliares para trabajar con el plano de vista
-	vec3 viewport_horizontal = vec3(viewport_width,0.0f,0.0f); // (0,0) -->
-	vec3 viewport_vertical = vec3(0.0f,-viewport_height,0.0f); // |
+	vec3 viewport_horizontal = viewport_width * u;
+	vec3 viewport_vertical = viewport_height * (-v); // Hacia abajo
 	// Distancia entre pixeles en R3
 	pixel_horizontal_delta = viewport_horizontal / image_width;
 	pixel_vertical_delta = viewport_vertical / image_height;
 	// Coordenadas de la esquina superior izquierda del viewport
-	point3 viewport_origin = camera_center - vec3(0.0f,0.0f,focal_length)
-		- 0.5 * viewport_horizontal - 0.5 * viewport_vertical;
+	point3 viewport_origin = camera_center - (focal_length * w)
+	       	- 0.5 * viewport_horizontal - 0.5 * viewport_vertical;
 	pixel_origin = viewport_origin + 0.5*pixel_horizontal_delta + 0.5*pixel_vertical_delta;
 }
 
@@ -45,7 +54,7 @@ color camera::rayTrace(const ray& r,  const hittableList& world, int depth){
 		//double ref_coefficient = rec.mat->ref;
 	}
 	// Fondo (si no hubo colisión)
-	return color(0.01,0.01,0.01);
+	return world.background_color;
 	//double h = 0.5 * (r.direction.y() + 1.0f); // Entre 0 y 1, pues direction esta normalizado
 	//return (1.0f - h)*color(0.63f, 0.28f, 0.92f) + h*color(0.96f, 0.76f, 0.43f);
 }

@@ -1,0 +1,10 @@
+Otras Primitivas (Triangulo -> cuadrado -> cubo o Mesh)
+SCRIPTING de escenas!!! 
+Escenas bonitas y comparativas
+
+--- Opcional ---
+
+GIF
+¿Transformaciones de cuerpos?
+Dielectric???
+Correr en paralelo

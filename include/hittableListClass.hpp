@@ -11,6 +11,7 @@ struct hittableList : hittable{
 	vector<shared_ptr<hittable>> objects;
 	vector<light> light_sources;
 	color ambient_light = color(0.1f,0.1f,0.1f);
+	color background_color = color(0.1f,0.1f,0.1f);
 	hittableList();
 	hittableList(shared_ptr<hittable> obj);
 

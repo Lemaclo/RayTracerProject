@@ -17,12 +17,19 @@ struct camera{
 	int image_height; // Alto
 	int samples_per_pixel = 10; // Supersampling. Cuantos rayos tiramos por pixel.
 	int max_depth = 10; // Máximo número de veces que un rayo rebota
+	// Posicion y rotacion de camara
+	double vfov = 90; // Angulo vertical de vista
+	point3 lookfrom = point3(0.0,0.0,0.0); //Pos de la camara
+	point3 lookat = point3(0.0,0.0,-1.0); // Direccion de los rayos
+	vec3 vup = vec3(0,1,0); // Desde la camara, la posicion hacia arriba (para el angulo)
+
 	vec3 camera_center = point3(0.0f,0.0f,0.0f); // Punto de vista del mundo 
 	// Vectores auxiliares para trabajar la posicion de los pixeles en la escena
 	vec3 pixel_horizontal_delta;
 	vec3 pixel_vertical_delta;
 	point3 pixel_origin;
 	camera();
+	vec3 u,v,w; // Base de la camara
 	void init();
 	// Función principal de todo esto: Lanza un rayo y devuelve un color.
 	color rayTrace(const ray& r,  const hittableList& world, int depth); 
