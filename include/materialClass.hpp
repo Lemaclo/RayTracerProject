@@ -11,6 +11,7 @@ struct material{
 	color col;
 	double ambient_coefficient, diffuse_coefficient, specular_coefficient;
 	double reflectance, refractance;
+	double specular_exponent;
 
 	virtual ~material() = default;
 	
@@ -18,12 +19,12 @@ struct material{
 };
 
 struct metal : public material{
-	metal(color c, double ka, double kd, double ks, double refl, double refr);
+	metal(color c, double ka, double kd, double ks, double a, double refl, double refr);
 	bool scatter(const ray& r_in, const hit_record& rec, ray &r_out) override;
 };
 
 struct lambertian : public material{
-	lambertian(color c, double ka, double kd, double ks, double refl, double refr);
+	lambertian(color c, double ka, double kd, double ks, double a, double refl, double refr);
 	bool scatter(const ray& r_in, const hit_record& rec, ray &r_out) override;
 };
 

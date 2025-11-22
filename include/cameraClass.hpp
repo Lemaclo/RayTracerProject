@@ -7,6 +7,9 @@
 # include "utility.hpp"
 # include "materialClass.hpp"
 # include "lightClass.hpp"
+# include <cmath>
+
+using namespace std;
 
 struct camera{
 	double aspect_ratio = 1.0f; // Proporción de altura y ancho de la imagen

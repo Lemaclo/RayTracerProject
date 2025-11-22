@@ -36,12 +36,12 @@ color camera::rayTrace(const ray& r,  const hittableList& world, int depth){
 			if(!world.hit(shadow_ray,interval(0.001f,t_light),shadow_rec)){
 				radiance += phong_ilumination(rec, r, shadow_ray, l, world);
 			}
-			ray reflection;
-			if(rec.mat->scatter(r,rec,reflection))
-				 radiance += rec.mat->reflectance * rayTrace(reflection,world, depth-1); 
-			return radiance * rec.mat->col;
-			// TODO: Refraction rayy
 		}
+		ray reflection;
+		if(rec.mat->scatter(r,rec,reflection))
+			radiance += rec.mat->reflectance * rayTrace(reflection,world, depth-1); 
+		return radiance * rec.mat->col;
+		// TODO: Refraction rayy
 		//double ref_coefficient = rec.mat->ref;
 	}
 	// Fondo (si no hubo colisión)
@@ -100,7 +100,7 @@ color camera::phong_ilumination(hit_record &rec, const ray& camera_ray, const ra
 	vec3 r = reflect(shadow_ray.direction, rec.normal);
 	double sdot = dot(r, camera_ray.direction); // alpha pow
 	if(sdot > 0){
-		sdot *= sdot;
+		sdot = pow(sdot, rec.mat->specular_exponent);
 		specular = ks * sdot * l.specular_component;
 	}
 	return diffuse + specular;
