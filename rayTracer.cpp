@@ -13,6 +13,7 @@ using namespace std;
 # include "include/hittableClass.hpp"
 # include "include/hittableListClass.hpp"
 # include "include/sphereClass.hpp"
+# include "include/triangleClass.hpp"
 # include "include/rayClass.hpp"
 # include "include/cameraClass.hpp"
 # include "include/materialClass.hpp"
@@ -32,6 +33,8 @@ int main(){
 	world.add(make_shared<sphere>(0.5f, point3(0.0f,0.0f,-1.2f), rubber));
 	world.add(make_shared<sphere>(0.5f, point3(-1.0f,0.0f,-1.0f), shiny));
 	world.add(make_shared<sphere>(0.5f, point3(1.0f,0.0f,-1.0f), bronze2));
+	world.add(make_shared<triangle>(point3(-1.0f,1.0f,-1.0f), 
+				point3(1.0f,1.0f,-1.0f), point3(0.0f,0.0f,-1.5f), shiny));
 	//world.add(make_shared<sphere>(0.5f, point3(-1.0f,0.0f,-1.0f), left));
 	//world.add(make_shared<sphere>(0.5f, point3(1.0f,0.0f,-1.0f), right));
 	world.ambient_light = color(1.0,1.0,1.0);
@@ -49,8 +52,8 @@ int main(){
 	cam.samples_per_pixel = 10;
 	cam.max_depth = 5;
 	// Configuramos la vista
-	cam.vfov = 20;
-	cam.lookfrom = point3(-2,2,1);
+	cam.vfov = 70;
+	cam.lookfrom = point3(0,0,0);
 	cam.lookat = point3(0,0,-1);
 	cam.vup = vec3(0,1,0);
 	// Renderizamos la imagen de la escena

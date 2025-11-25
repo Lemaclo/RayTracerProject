@@ -7,6 +7,7 @@
 # include "utility.hpp"
 
 # define point3 vec3
+# define EPS 1e-9
 
 using namespace std;
 
