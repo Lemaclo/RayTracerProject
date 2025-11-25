@@ -14,6 +14,7 @@ using namespace std;
 # include "include/hittableListClass.hpp"
 # include "include/sphereClass.hpp"
 # include "include/triangleClass.hpp"
+# include "include/cubeClass.hpp"
 # include "include/rayClass.hpp"
 # include "include/cameraClass.hpp"
 # include "include/materialClass.hpp"
@@ -30,17 +31,17 @@ int main(){
 	//shared_ptr<material> right = make_shared<metal>(color(0.8f,0.6f,0.2f), 0.1,0.4,0.2, 0.3, 0.0);
 	// Escena de prueba hardcodeada
 	hittableList world(make_shared<sphere>(100.0f, point3(0, -100.5f, -1.0f), bronze));
-	world.add(make_shared<sphere>(0.5f, point3(0.0f,0.0f,-1.2f), rubber));
+	world.add(make_shared<cube>(interval(-0.5f,0.5f), interval(-0.5f,0.5f), interval(-1.7f,0.-1.3f), shiny));
+	world.add(make_shared<sphere>(0.5f, point3(0.0f,0.0f,1.0f), rubber));
 	world.add(make_shared<sphere>(0.5f, point3(-1.0f,0.0f,-1.0f), shiny));
 	world.add(make_shared<sphere>(0.5f, point3(1.0f,0.0f,-1.0f), bronze2));
-	world.add(make_shared<triangle>(point3(-1.0f,1.0f,-1.0f), 
-				point3(1.0f,1.0f,-1.0f), point3(0.0f,0.0f,-1.5f), shiny));
+	//world.add(make_shared<triangle>(point3(-1.0f,1.0f,-1.0f), point3(1.0f,1.0f,-1.0f), point3(0.0f,0.0f,-1.5f), shiny));
 	//world.add(make_shared<sphere>(0.5f, point3(-1.0f,0.0f,-1.0f), left));
 	//world.add(make_shared<sphere>(0.5f, point3(1.0f,0.0f,-1.0f), right));
 	world.ambient_light = color(1.0,1.0,1.0);
 	world.background_color = color(0.2,0.2,0.2);
 	//world.add_light_source(light(vec3(-1.0f, 10.0f, 0.0f), color(0.9,0.9,0.9), color(0.9,0.9,0.9)));
-	world.add_light_source(light(vec3(0.0f, 6.0f, -0.0f), color(1.0,1.0,1.0), color(1.0,1.0,1.0)));
+	world.add_light_source(light(vec3(10.0f, 10.0f, 2.0f), color(1.0,1.0,1.0), color(1.0,1.0,1.0)));
 	//world.add_light_source(light(vec3(10.0f, 0.0f, 0.0f), color(0.9,0.9,0.9), color(0.9,0.9,0.9)));
 	//world.add_light_source(light(vec3(0.0f, 0.0f, 3.0f), color(0.9,0.9,0.9), color(0.9,0.9,0.9)));
 	//world.add_light_source(light(vec3(10.0f, 3.0f, 0.0f), color(0.0,0.9,0.0), color(0.9,0.9,0.9)));
@@ -52,8 +53,8 @@ int main(){
 	cam.samples_per_pixel = 10;
 	cam.max_depth = 5;
 	// Configuramos la vista
-	cam.vfov = 70;
-	cam.lookfrom = point3(0,0,0);
+	cam.vfov = 45;
+	cam.lookfrom = point3(1,1,1);
 	cam.lookat = point3(0,0,-1);
 	cam.vup = vec3(0,1,0);
 	// Renderizamos la imagen de la escena
