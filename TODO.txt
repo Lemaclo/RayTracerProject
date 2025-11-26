@@ -1,6 +1,7 @@
 Otras Primitivas (Triangulo -> cuadrado -> cubo o Mesh) [X]
 SCRIPTING de escenas!!! [X]
 Escenas bonitas y comparativas
+Escenas aleatorias... :(
 
 --- Opcional ---
 
