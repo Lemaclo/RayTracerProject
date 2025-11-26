@@ -26,7 +26,6 @@ using namespace std;
 int main(){
 	// Materiales
 	// ambient, diffuse, specular, specular_expo, reflectance, refractance
-	//shared_ptr<material> rubber = make_shared<lambertian>(color(1.0f,0.0f,0.0f),0.02,0.01,0.4,10,0.3, 0.0);
 	ifstream f1("materials.txt");
 	int num_mat; f1 >> num_mat;
 	vector< shared_ptr<material> > materials(num_mat);
@@ -39,13 +38,6 @@ int main(){
 		else materials[i] = make_shared<lambertian>(color(r,g,b),ka,kd,ks,es,refl,refr);
 	}
 	f1.close();
-	//shared_ptr<material> rubber = make_shared<lambertian>(color(1.0f,0.0f,0.0f),0.2,0.5,0.4,10,0.02, 0.0);
-	//shared_ptr<material> bronze = make_shared<lambertian>();
-	//shared_ptr<material> bronze2 = make_shared<lambertian>;
-	//shared_ptr<material> shiny = make_shared<metal>();
-	//shared_ptr<material> right = make_shared<metal>(color(0.8f,0.6f,0.2f), 0.1,0.4,0.2, 0.3, 0.0);
-	// Escena de prueba hardcodeada
-	//hittableList world(make_shared<cube>(interval(-100,100),interval(-100,-0.5f),interval(-100,10),materials[1]));
 	hittableList world;
 	ifstream f2("escena.txt");
 	int num_entities; f2 >> num_entities;
@@ -99,22 +91,6 @@ int main(){
 	}
 
 	f2.close();
-	/*
-	world.add(make_shared<cube>(interval(-0.5f,0.5f), interval(-0.5f,0.5f), interval(-1.7f,-1.3f),materials[3]));
-	world.add(make_shared<sphere>(0.5f, point3(0.0f,0.0f,1.0f), materials[0]));
-	world.add(make_shared<sphere>(0.5f, point3(-1.0f,0.0f,-1.0f), materials[3]));
-	world.add(make_shared<sphere>(0.5f, point3(1.0f,0.0f,-1.0f), materials[2]));
-	*/
-	//world.add(make_shared<triangle>(point3(-1.0f,1.0f,-1.0f), point3(1.0f,1.0f,-1.0f), point3(0.0f,0.0f,-1.5f), shiny));
-	//world.add(make_shared<sphere>(0.5f, point3(-1.0f,0.0f,-1.0f), left));
-	//world.add(make_shared<sphere>(0.5f, point3(1.0f,0.0f,-1.0f), right));
-	world.background_color = color(0.2,0.2,0.2);
-	//world.add_light_source(light(vec3(-1.0f, 10.0f, 0.0f), color(0.9,0.9,0.9), color(0.9,0.9,0.9)));
-	world.add_light_source(light(vec3(10.0f, 10.0f, 2.0f), color(1.0,1.0,1.0), color(1.0,1.0,1.0)));
-	//world.add_light_source(light(vec3(10.0f, 0.0f, 0.0f), color(0.9,0.9,0.9), color(0.9,0.9,0.9)));
-	//world.add_light_source(light(vec3(0.0f, 0.0f, 3.0f), color(0.9,0.9,0.9), color(0.9,0.9,0.9)));
-	//world.add_light_source(light(vec3(10.0f, 3.0f, 0.0f), color(0.0,0.9,0.0), color(0.9,0.9,0.9)));
-	//world.add_light_source(light(vec3(0.0f, 0.0f, 5.0f), color(0.0,0.0,0.9), color(0.9,0.9,0.9)));
 	// Creamos una cámara
 	camera cam;
 	ifstream f3("cameraConfig.txt");
