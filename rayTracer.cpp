@@ -45,15 +45,69 @@ int main(){
 	//shared_ptr<material> shiny = make_shared<metal>();
 	//shared_ptr<material> right = make_shared<metal>(color(0.8f,0.6f,0.2f), 0.1,0.4,0.2, 0.3, 0.0);
 	// Escena de prueba hardcodeada
-	hittableList world(make_shared<cube>(interval(-100,100),interval(-100,-0.5f),interval(-100,10),materials[1]));
-	world.add(make_shared<cube>(interval(-0.5f,0.5f), interval(-0.5f,0.5f), interval(-1.7f,0.-1.3f),materials[3]));
+	//hittableList world(make_shared<cube>(interval(-100,100),interval(-100,-0.5f),interval(-100,10),materials[1]));
+	hittableList world;
+	ifstream f2("escena.txt");
+	int num_entities; f2 >> num_entities;
+	for(int i=0;i<num_entities;i++){
+		int type; f2 >> type; // 0: esfera, 1: cubo, 2: triangulo
+		double r, x, y, z, m, M;
+		interval ix,iy,iz;
+		point3 a,b,c;
+		int mat;
+		switch(type){
+			case 0:
+				// Esfera
+				f2 >> r >> x >> y >> z >> mat;
+				world.add(make_shared<sphere>(r, point3(x,y,z), materials[mat]));
+				break;
+			case 1:
+				// Cubo
+				f2 >> m >> M;
+				ix = interval(m,M);
+				f2 >> m >> M;
+				iy = interval(m,M);
+				f2 >> m >> M;
+				iz = interval(m,M);
+				f2 >> mat;
+				world.add(make_shared<cube>(ix,iy,iz,materials[mat]));
+				break;
+			case 2:
+				// Triangulo
+				f2 >> x >> y >> z; a = point3(x,y,z);
+				f2 >> x >> y >> z; b = point3(x,y,z);
+				f2 >> x >> y >> z; c = point3(x,y,z);
+				f2 >> mat;
+				world.add(make_shared<triangle>(a,b,c,materials[mat]));
+				break;
+			default:
+				break;
+		}
+	}
+	double r,g,b; 
+	f2 >> r >> g >> b; world.ambient_light = color(r,g,b);
+	f2 >> r >> g >> b; world.background_color = color(r,g,b);
+
+	int num_lights; f2 >> num_lights;
+	for(int i=0;i<num_lights;i++){
+		double x,y,z; f2 >> x >> y >> z;
+		f2 >> r >> g >> b;
+		color diffuse(r,g,b);
+		f2 >> r >> g >> b;
+		color especular(r,g,b);
+		world.add_light_source(light(point3(x,y,z), diffuse, especular));
+	}
+
+	f2.close();
+	/*
+	world.add(make_shared<cube>(interval(-0.5f,0.5f), interval(-0.5f,0.5f), interval(-1.7f,-1.3f),materials[3]));
 	world.add(make_shared<sphere>(0.5f, point3(0.0f,0.0f,1.0f), materials[0]));
 	world.add(make_shared<sphere>(0.5f, point3(-1.0f,0.0f,-1.0f), materials[3]));
 	world.add(make_shared<sphere>(0.5f, point3(1.0f,0.0f,-1.0f), materials[2]));
+	*/
 	//world.add(make_shared<triangle>(point3(-1.0f,1.0f,-1.0f), point3(1.0f,1.0f,-1.0f), point3(0.0f,0.0f,-1.5f), shiny));
 	//world.add(make_shared<sphere>(0.5f, point3(-1.0f,0.0f,-1.0f), left));
 	//world.add(make_shared<sphere>(0.5f, point3(1.0f,0.0f,-1.0f), right));
-	world.ambient_light = color(1.0,1.0,1.0);
 	world.background_color = color(0.2,0.2,0.2);
 	//world.add_light_source(light(vec3(-1.0f, 10.0f, 0.0f), color(0.9,0.9,0.9), color(0.9,0.9,0.9)));
 	world.add_light_source(light(vec3(10.0f, 10.0f, 2.0f), color(1.0,1.0,1.0), color(1.0,1.0,1.0)));
